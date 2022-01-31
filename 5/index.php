@@ -1,68 +1,79 @@
---- плохо написанный код 
+<?php
+use Decorator\ {
+    ComponentDecorator,
+    Dessert,
+    IceCream,
+    MilkShake,
+    Pie,
+    Nuts,
+    Chocolate,
+    Cinnamon
+};
+require_once "Dessert.php";
+require_once "ComponentDecorator.php";
+require_once "IceCream.php";
+require_once "MilkShake.php";
+require_once "Pie.php";
+require_once "Nuts.php";
+require_once "Chocolate.php";
+require_once "Cinnamon.php";
 
-$address = 'One Infinite Loop, Cupertino 95014';
-$cityZipCodeRegex = '/^[^,\\]+[,\\\s]+(.+?)\s*(\d{5})?$/';
-preg_match($cityZipCodeRegex, $address, $matches);
+// Обычный молочный коктейль
+$dessert = new MilkShake();
+echo 'Десерт: ' . $dessert->getDescription();
+echo '<br>';
+echo 'Цена: ' . $dessert->cost() . ' USD';
+echo '<br>';
+/*
+Вывод:
+Десерт: Молочный коктейль
+Цена: 3 USD
+*/
 
-saveCityZipCode($matches[1], $matches[2]);
+// Молочный коктейль с корицей
+$dessert = new Cinnamon(new MilkShake());
+echo 'Десерт: ' . $dessert->getDescription();
+echo '<br>';
+echo 'Цена: ' . $dessert->cost() . ' USD';
+echo '<br>';
+/*
+Вывод:
+Десерт: Молочный коктейль, Коррица
+Цена: 3.1 USD
+*/
 
---- хорошо написанный код 
+// Вкусный пирог с орешками, шоколадом и корицей
+$dessert = new Cinnamon(new Chocolate(new Nuts(new Pie())));
+echo 'Десерт: ' . $dessert->getDescription();
+echo '<br>';
+echo 'Цена: ' . $dessert->cost() . ' USD';
+echo '<br>';
+/*
+Вывод:
+Десерт: Пирог, Орешки, Шоколад, Коррица
+Цена: 9.4 USD
+*/
 
-$address = 'One Infinite Loop, Cupertino 95014';
-$cityZipCodeRegex = '/^[^,\\]+[,\\\s]+(.+?)\s*(\d{5})?$/';
-preg_match($cityZipCodeRegex, $address, $matches);
+// Вкусный пирог с двойным шоколадом
+$dessert = new Chocolate(new Chocolate(new Pie()));
+echo 'Десерт: ' . $dessert->getDescription();
+echo '<br>';
+echo 'Цена: ' . $dessert->cost() . ' USD';
+echo '<br>';
+/*
+Вывод:
+Десерт: Пирог, Шоколад, Шоколад
+Цена: 9.6 USD
+*/
 
-list(, $city, $zipCode) = $matches;
-saveCityZipCode($city, $zipCode);
-
---- плохо написанный код 
-
-$l = ['Austin', 'New York', 'San Francisco'];
-
-for ($i = 0; $i < count($l); $i++) {
-    $li = $l[$i];
-    doStuff();
-    doSomeOtherStuff();
-    // ...
-    // ...
-    // ...
-    // Wait, what is `$li` for again?
-    dispatch($li);
-}
-
---- хорошо написанный код 
-
-$locations = ['Austin', 'New York', 'San Francisco'];
-
-foreach ($locations as $location) {
-    doStuff();
-    doSomeOtherStuff();
-    // ...
-    // ...
-    // ...
-    dispatch($location);
-});
-
---- плохо написанный код 
-
-$car = [
-    'carMake'  => 'Honda',
-    'carModel' => 'Accord',
-    'carColor' => 'Blue',
-];
-
-function paintCar(&$car) {
-    $car['carColor'] = 'Red';
-}
-
---- хорошо написанный код 
-
-$car = [
-    'make'  => 'Honda',
-    'model' => 'Accord',
-    'color' => 'Blue',
-];
-
-function paintCar(&$car) {
-    $car['color'] = 'Red';
-}
+// Мороженное с тройными орешками и двойным шоколадом
+$dessert = new Nuts(new Nuts(new Nuts(new Chocolate(new Chocolate(new IceCream())))));
+echo 'Десерт: ' . $dessert->getDescription();
+echo '<br>';
+echo 'Цена: ' . $dessert->cost() . ' USD';
+echo '<br>';
+/*
+Вывод:
+Десерт: Мороженное, Шоколад, Шоколад, Орешки, Орешки, Орешки
+Цена: 10.6 USD
+*/
